@@ -33,9 +33,13 @@ Scheduler::~Scheduler()
 void Scheduler::initialize()
 {
     NrUsers = par("gateSize").intValue();
-    NrOfChannels = 10;//read from omnetpp.ini
+    NrOfChannels = par("totalRBs").intValue();//read from omnetpp.ini
+    rbPerUser=par("rbPerUser").intValue();
+    if (rbPerUser * NrUsers > NrOfChannels) {
+           EV << "Warning: Insufficient RBs to satisfy allocation!" << endl;
+       }
     selfMsg = new cMessage("selfMsg");
-    for(int i=0; i<10;i++){
+    for(int i=0; i<NrUsers;i++){
            q[i]=0;
          //  NrBlocks[i]=0;
     }
@@ -55,44 +59,29 @@ void Scheduler::handleMessage(cMessage *msg)
         EV << "q["<<j<<"]= " << q[j] <<endl;
     }
      */
-
-
-    int userWeights[NrUsers];
-    for(int i =0; i<NrUsers;i++){
-
-    if (msg->arrivedOn("rxInfo", i)){
-        q[i]= msg->par("ql_info");
-        EV << "Update: q["<<i<<"]= " << q[i] <<endl;
-        delete(msg);
-
+    for (int i = 0; i < NrUsers; i++) {
+         if (msg->arrivedOn("rxInfo", i)) {
+             q[i] = msg->par("ql_info");
+             EV << "Update: q[" << i << "] = " << q[i] << endl;
+             delete msg;
+         }
+     }
+    if(msg==selfMsg){
+        for(int i=0;i<NrUsers;i++){
+            NrBlocks[i]=rbPerUser;
+        }
     }
-    }
 
-        if (msg == selfMsg){
-
-          //here comes the scheduling algorithm !!!
-            for(int i =0;i<NrUsers;i++){
-                NrBlocks[i]=1;//you have to change this !!!
-             }
-
-            for(int i =0;i<NrUsers;i++){
-
-        //finds out the length of each queue !!
-                if(NrBlocks[i]>0){
-                    cMessage *cmd = new cMessage("cmd");
-
-                    // q[i]= q[i]-NrBlocks[i];
-                    // EV << "Decrease: q["<<i<<"]= " << q[i] <<endl;
-                    cmd->addPar("nrBlocks");
-                    cmd->par("nrBlocks").setLongValue(NrBlocks[i]);
-                    //set parameter value, e.g., nr of blocks to be sent from the queue by user i
-                    //
-                    send(cmd,"txScheduling",i);
-                }
-          //  double xtime = simTime().dbl();
-            }
+    for (int i = 0; i < NrUsers; i++) {
+              if (NrBlocks[i] > 0) {
+                  cMessage *cmd = new cMessage("cmd");
+                  cmd->addPar("nrBlocks");
+                  cmd->par("nrBlocks").setLongValue(NrBlocks[i]); // Set RBs for the user
+                  send(cmd, "txScheduling", i); // Send command to the user
+                  EV << "Allocated " << NrBlocks[i] << " RBs to User " << i << endl;
+              }
+          }
         scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
 
     }
 
-}

@@ -32,6 +32,7 @@ private:
     cMessage *selfMsg;
     int NrUsers;
     int NrOfChannels;
+    int rbPerUser;
    // int userWeights[3];
     int q[10];// queues' lengths. NrUsers schould be <= 10 !!!
     int NrBlocks[10];
