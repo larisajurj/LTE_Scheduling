@@ -1,0 +1,63 @@
+version 3
+run Sched1-0-20241130-13:33:51-23168
+attr configname Sched1
+attr datetime 20241130-13:33:51
+attr datetimef 20241130-133351
+attr experiment Sched1
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network RadioSch2
+attr processid 23168
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config description "low job arrival rate"
+config *.usersCount 3
+config **.user[*].generator.sendIaTime "0.2 ms"
+config *.scheduler.gateSize 5
+config *.scheduler.totalRBs 30
+config *.scheduler.rbPerUser 6
+config *.scheduler.schedulingPeriod 0.001s
+config **.scheduler.totalQueue.signalName "\"totalQueue\""
+config **.scheduler.rbAllocation.signalName "\"rbAllocation\""
+config network RadioSch2
+config sim-time-limit 100h
+config cpu-time-limit 300s
+
+par RadioSch2.scheduler typename "\"Scheduler\""
+par RadioSch2.scheduler usersCount 3
+par RadioSch2.scheduler schedulingPeriod 1ms
+attr unit ms
+par RadioSch2.scheduler gateSize 3
+par RadioSch2.scheduler totalRBs 30
+attr default 10
+par RadioSch2.scheduler rbPerUser 6
+par RadioSch2.sink typename "\"Sink\""
+par RadioSch2.sink gateSize 3
+par RadioSch2.user[0].generator typename "\"Source\""
+par RadioSch2.user[0].generator sendIaTime 0.2ms
+attr unit ms
+par RadioSch2.user[0].myqq typename "\"MyQ\""
+par RadioSch2.user[0].myqq qlp 3
+par RadioSch2.user[0] typename "\"User\""
+par RadioSch2.user[1].generator typename "\"Source\""
+par RadioSch2.user[1].generator sendIaTime 0.2ms
+attr unit ms
+par RadioSch2.user[1].myqq typename "\"MyQ\""
+par RadioSch2.user[1].myqq qlp 3
+par RadioSch2.user[1] typename "\"User\""
+par RadioSch2.user[2].generator typename "\"Source\""
+par RadioSch2.user[2].generator sendIaTime 0.2ms
+attr unit ms
+par RadioSch2.user[2].myqq typename "\"MyQ\""
+par RadioSch2.user[2].myqq qlp 3
+par RadioSch2.user[2] typename "\"User\""
+par RadioSch2 typename "\"RadioSch2\""
+par RadioSch2 usersCount 3
+attr required ""
+

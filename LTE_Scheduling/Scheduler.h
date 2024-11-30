@@ -39,6 +39,8 @@ private:
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    simsignal_t totalQueueSignal;
+     simsignal_t rbAllocationSignal;
 };
 
 #endif
