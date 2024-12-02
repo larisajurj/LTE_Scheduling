@@ -18,7 +18,7 @@
 //
 simple Sink
 {
- parameters:
+    parameters:
         int gateSize;
        // @display("i=block/sink");
       //  @signal[lifetime](type="simtime_t");
