@@ -17,6 +17,7 @@
 #define __SCHED_TST_SCHEDULER_H_
 
 #include <omnetpp.h>
+#include <algorithm>
 
 using namespace omnetpp;
 
@@ -35,6 +36,9 @@ private:
    // int userWeights[3];
     int q[10];// queues' lengths. NrUsers schould be <= 10 !!!
     int NrBlocks[10];
+    std::vector<int> r;
+    std::vector<int> p;
+    std::vector<double> T; // Time since last served for each user
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

@@ -38,44 +38,15 @@ void Source::handleMessage(cMessage *msg)
 
 {
     ASSERT(msg == sendMessageEvent);
-//for(j=0;j<nrPackets;j++){
+    int i =  getParentModule()->getIndex();
     cMessage *job = new cMessage("job");
-    //the "job" message can have a parameter PacketLength !
+    EV<<"Sending new packet for user "<<i<<endl;
     send(job, "txPackets");
-
-//}
-    //end for
 
     double sendingTime;
     sendingTime = par("sendIaTime").doubleValue();
-
-   // if(simTime() >= MAX_SiM) endSimulation();
-    //MAX_SiM se pune in ini si citeste de acolo si trebuie sa fie de cel putin 1000 de ori mai mare
-    // decat sendingTime pt netwload 80% (ideal de 10 mii de ori mai mare)
-
-
-    //scheduleAt(simTime()+ exponential(sendingTime));
-
-    // sendingTime = function(network load)
-
-    /*netwload = data_generated/ transfer_rate
-     *
-     * data_generated = nrUsers* nrPackets *PacketLength / sendingTime
-     * PacketLength = 1
-     *
-     * transfer_rate = nr_of_channels/schedulingCycle ;
-     * schedulingCycle = 1 ms
-     *
-     * netwload = (nrUsers*nrPackets*PacketLength*schedulingCycle)/(sendingTime*nr_of_channels)
-     *
-     *sendingTime =  (nrUsers*nrPackets*PacketLength*schedulingCycle)/(netwload*nr_of_channels)
-     *
-     * */
-
-
     scheduleAt(simTime()+ exponential(sendingTime), sendMessageEvent);
 
-    //scheduleAt(simTime()+par("sendIaTime").doubleValue(), sendMessageEvent);
 }
 
 

@@ -18,7 +18,8 @@
 //
 simple Scheduler
 {
-      parameters:
+    parameters:
+        int usersCount;
         //@display("i=block/dispatch");
         //volatile 
         double schedulingPeriod @unit(ms) = default(1 ms);

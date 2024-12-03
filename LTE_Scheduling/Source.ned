@@ -19,7 +19,7 @@
 simple Source
 {
      parameters:
-         double sendIaTime @unit(ms) = default(10 ms);
+         double sendIaTime @unit(ms) = default(1 ms);
         //volatile double generatorPeriod @unit(ms) = default(100ms);
       //  @display("i=block/source");
     gates:
