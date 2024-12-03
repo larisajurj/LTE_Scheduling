@@ -24,6 +24,8 @@ simple Scheduler
         int gateSize;//me, dt
         int totalRBs @default(10);
         int rbPerUser;
+        @signal[totalQueueSignal](type=double);
+        @signal[rbAllocationSignal](type=double);
 
     gates:
         output txScheduling[gateSize];

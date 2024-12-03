@@ -39,8 +39,17 @@ private:
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    void updateRadioQuality();
+    void computePFMetric();
+    double sumNrBlocks();
+
     simsignal_t totalQueueSignal;
      simsignal_t rbAllocationSignal;
+      std::vector<double> r;  // Radio link quality for each user
+      std::vector<double> T;  // Time since last allocation for each user
+      std::vector<double> p;  // PF metric for each user
+
+
 };
 
 #endif
