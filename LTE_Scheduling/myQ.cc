@@ -11,7 +11,7 @@ void MyQ::handleMessage(cMessage *msg)
 
 {
 
-    ql = 0; //=9;
+    int ql = queue.getLength();
     int i =  getParentModule()->getIndex();
 
     if (msg->arrivedOn("rxPackets")){

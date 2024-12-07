@@ -17,7 +17,8 @@
 #define __SCHED_TST_SINK_H_
 
 #include <omnetpp.h>
-
+#include <vector>
+#include <map>
 using namespace omnetpp;
 
 /**
@@ -26,10 +27,27 @@ using namespace omnetpp;
 class Sink : public cSimpleModule
 {
 private:
-  //  simsignal_t lifetimeSignal;
+    simsignal_t lifetimeSignal;
+    double sumLifetimes = 0;
+    double maxLifetime = 0;
+    double minLifetime = DBL_MAX;
+    int messageCount = 0;
+    std::vector<double> delayTraces;
+    std::map<int, std::vector<double>> userDelayTraces;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+    virtual void finish();
+public:
+    Sink();
+
+
 };
+Sink::Sink() {
+    for (int i = 0; i < 3; ++i) { // Adjust 3 to the number of users
+        userDelayTraces[i] = std::vector<double>();
+    }
+}
 
 #endif
