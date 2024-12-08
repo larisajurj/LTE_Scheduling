@@ -5,13 +5,23 @@ Define_Module(MyQ);
 void MyQ::initialize()
 {
     queue.setName("queue");
+    queueLength = par("qlp");
 }
+
+void MyQ::setQlp(int value) {
+    queueLength = value; // Update the runtime-modifiable qlp
+}
+
+int MyQ::getQlp() const {
+    return queueLength; // Return the current value of the runtime-modifiable qlp
+}
+
 
 void MyQ::handleMessage(cMessage *msg)
 
 {
 
-    int ql = queue.getLength();
+    int ql = 0;
     int i =  getParentModule()->getIndex();
 
     if (msg->arrivedOn("rxPackets")){
@@ -28,6 +38,7 @@ void MyQ::handleMessage(cMessage *msg)
         }
     }
     ql = queue.getLength();
-    EV << "ql[" << i<<"] = " << ql << endl;
+    setQlp(ql);
+    //EV << "ql[" << i<<"] = " << ql << endl;
 
 }

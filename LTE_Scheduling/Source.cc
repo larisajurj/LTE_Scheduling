@@ -40,7 +40,7 @@ void Source::handleMessage(cMessage *msg)
     ASSERT(msg == sendMessageEvent);
     int i =  getParentModule()->getIndex();
     cMessage *job = new cMessage("job");
-    EV<<"Sending new packet for user "<<i<<endl;
+    //EV<<"Sending new packet for user "<<i<<endl;
     send(job, "txPackets");
 
     double sendingTime;
