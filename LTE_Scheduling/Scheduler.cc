@@ -42,9 +42,13 @@ void Scheduler::initialize()
     p.resize(NrUsers, 0.0); //  product of its radio link quality r[i] and the time elapsed since it was served last time T[i]
     for(int i=0; i<NrUsers;i++){
            q[i]=0;
-           userWeights[i] = i+1;
            NrBlocks[i]=0;
     }
+    userWeights[0] = 1;
+    userWeights[1] = 8;
+    userWeights[2] = 4;
+    userWeights[3] = 2;
+    userWeights[4] = 1;
     scheduleAt(simTime(), selfMsg);
 }
 

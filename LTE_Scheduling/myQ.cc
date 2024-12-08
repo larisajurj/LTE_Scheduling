@@ -39,6 +39,4 @@ void MyQ::handleMessage(cMessage *msg)
     }
     ql = queue.getLength();
     setQlp(ql);
-    //EV << "ql[" << i<<"] = " << ql << endl;
-
 }

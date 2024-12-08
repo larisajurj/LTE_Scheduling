@@ -20,65 +20,26 @@ Define_Module(Sink);
 
 void Sink::initialize()
 {
-    lifetimeSignal = registerSignal("lifetime");
+    int NrUsers = par("gateSize").intValue();
+        for (int i = 0; i < NrUsers; i++) {
+                std::string signalName = "lifetime_user" + std::to_string(i);
+                lifetimeSignals.push_back(registerSignal(signalName.c_str()));
+                EV << "Registered signal: " << signalName << endl;
+            }
 }
 
 void Sink::handleMessage(cMessage *msg)
 {
-    simtime_t now = simTime();
-        simtime_t creationTime = msg->getCreationTime();
-
-        // Debugging creation time
-        if (creationTime == SimTime(0) || creationTime < 0) {
-               EV << "Invalid creation time for message: " << msg->getName() << endl;
-               delete msg;
-               return;
+    int NrUsers = par("gateSize").intValue();
+    simtime_t lifetime = simTime() - msg->getCreationTime();
+    for(int i=0;i < NrUsers;i++){
+        if (msg->arrivedOn("rxPackets",i)) {
+            EV << "Message arrived on rxPackets[" << i << "]" << endl;
+    // Emit the lifetime signal for the corresponding user
+               emit(lifetimeSignals[i], lifetime);
+               break; // Exit the loop after identifying the gate
            }
-
-        simtime_t lifetime = now - creationTime;
-        if (lifetime == SimTime(0) || lifetime < 0) {
-                EV << "Invalid lifetime: " << lifetime << endl;
-                delete msg;
-                return;
-            }
-    sumLifetimes += lifetime.dbl();  // Update total lifetime
-    messageCount++;                  // Increment message count
-
-    if (lifetime > maxLifetime) {
-        maxLifetime = lifetime.dbl();  // Update max if current lifetime is greater
     }
-    if (lifetime < minLifetime) {
-        minLifetime = lifetime.dbl();  // Update min if current lifetime is smaller
-    }
-
-      delayTraces.push_back(lifetime.dbl());
-      EV << "Received " << msg->getName() << ", lifetime: " << lifetime << "s" << endl;
-      emit(lifetimeSignal, lifetime);
-      delete msg;
+    EV << "Received " << msg->getName() << ", lifetime: " << lifetime << "s" << endl;
+    delete msg;
 }
-void Sink::finish() {
-    double meanLifetime = messageCount > 0 ? sumLifetimes / messageCount : 0;
-
-    // Record scalar values for mean, max, and min lifetimes
-    recordScalar("meanLifetime", meanLifetime);
-    recordScalar("maxLifetime", maxLifetime);
-    recordScalar("minLifetime", minLifetime);
-    recordScalar("messageCount", messageCount);
-
-    // Write traces to a file
-    std::ofstream outFile("C:\\Users\\Edward\\Desktop\\Homework.txt"); // Opens a file in write mode
-    outFile << "Max Lifetime: " << maxLifetime << "s\n";
-         outFile << "Min Lifetime: " << minLifetime << "s\n";
-         outFile << "Average Lifetime: " << (sumLifetimes / messageCount) << "s\n";
-    if (outFile.is_open()) {
-        outFile << "Lifetime traces for all messages:\n";
-        for (double delay : delayTraces) {
-            outFile << delay << "\n"; // Write each delay on a new line
-        }
-        outFile.close(); // Close the file after writing
-    } else {
-        EV << "Error: Could not open file for writing!" << endl;
-    }
-
-}
-
