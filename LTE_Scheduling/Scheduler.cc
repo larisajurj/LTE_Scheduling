@@ -1,22 +1,6 @@
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
-
 #include "Scheduler.h"
 #include "MyQ.h"
 #include <iomanip>
-
 Define_Module(Scheduler);
 
 
@@ -38,9 +22,9 @@ void Scheduler::initialize()
     NrOfChannels = 10;//read from omnetpp.ini
     selfMsg = new cMessage("selfMsg");
     r.resize(NrUsers, 1.0);
-    T.resize(NrUsers, 0.0);
+    T.resize(NrUsers, 1.0);
     p.resize(NrUsers, 0.0); //  product of its radio link quality r[i] and the time elapsed since it was served last time T[i]
-    for(int i=0; i<NrUsers;i++){
+    for(int i=0; i<10;i++){
            q[i]=0;
            NrBlocks[i]=0;
     }
@@ -56,32 +40,46 @@ void Scheduler::handleMessage(cMessage *msg)
 {
         int q[NrUsers];
         int NrBlocks[NrUsers];
+        double totalDelayHP = 0;
+        int countHP = 0;
+
+        for (int idx=0;idx<NrUsers;idx++) {
+            if(userWeights[idx]==8){
+                totalDelayHP += simTime().dbl() - T[idx];
+                            countHP++;
+            }
+
+        }
+
+        double avgDelayHP = (countHP > 0) ? (totalDelayHP / countHP) : 0;
+        W_HP += computeWHPAdjustment(avgDelayHP);
+        W_HP = std::max(0.5, std::min(W_HP, 2.0));  // Keep W_HP in range [0.5, 2.0]
+        EV << "Updated W_HP = " << W_HP << endl;
+        // Step 1: Get queue lengths and randomly generate channel quality
+        for(int j=0; j<NrUsers; j++){
+            q[j]= getParentModule()->getSubmodule("user",j)->getSubmodule("myqq")->par("qlp");
+            r[j] = uniform(0.1, 1.0); // Random quality between 0.1 and 1.0
+            EV << "queue length q["<<j<<"]= " << q[j] <<endl;
+        }
 
         if (msg == selfMsg){
-        // Step 1: Get queue lengths and randomly generate channel quality
-           for(int j=0; j<NrUsers; j++){
-               cModule* userModule = getParentModule()->getSubmodule("user", j);
-               cModule* myqqModule = userModule->getSubmodule("myqq");
-               MyQ* myqq = dynamic_cast<MyQ*>(myqqModule);
+            std::vector<double> r(NrUsers);   // Channel quality for each user
+            std::vector<double> p(NrUsers);   // PF metric for each user
 
-               q[j] = myqq->getQlp();
+            // Step 2: Compute the PF metric for each user
+                        for (int i = 0; i < NrUsers; i++) {
+                            double timeSinceLastServed = simTime().dbl() - T[i];
+                            int weight = userWeights[i];
+                            if(userWeights[i]==8){
+                                weight=W_HP;
+                            }else{
+                                weight=1;
+                            }
+                            p[i] = r[i] * timeSinceLastServed *weight;
+                            EV << "Scheduler: Updated PT p[" << i << "] = " << std::fixed << std::setprecision(6) << p[i] << endl;
+                            EV << "r[" << i << "] = " << std::fixed << std::setprecision(6) << r[i] << " t[" << i << "] = " << std::fixed << std::setprecision(6) << T[i] << endl;
 
-               r[j] = uniform(0.1, 1.0); // Random quality between 0.1 and 1.0
-               EV << "Scheduler: Updated queue length q["<<j<<"]= " << q[j] <<endl;
-               EV << "Scheduler: Updated r["<<j<<"]= " << r[j] <<endl;
-
-           }
-           //std::vector<double> r(NrUsers);   // Channel quality for each user
-           std::vector<double> p(NrUsers);   // PF metric for each user
-
-        // Step 2: Compute the PF metric for each user
-            for (int i = 0; i < NrUsers; i++) {
-                double timeSinceLastServed = simTime().dbl() - T[i];
-                p[i] = r[i] * timeSinceLastServed * userWeights[i];
-                EV << "Scheduler: Updated PT p[" << i << "] = " << std::fixed << std::setprecision(6) << p[i] << endl;
-                EV << "r[" << i << "] = " << std::fixed << std::setprecision(6) << r[i] << " t[" << i << "] = " << std::fixed << std::setprecision(6) << T[i] << endl;
-
-            }
+                        }
 
         // Step 3: Sort users by their PF metric in descending order
             std::vector<int> indices(NrUsers);
@@ -95,10 +93,7 @@ void Scheduler::handleMessage(cMessage *msg)
             int remainingChannels = NrOfChannels;
             for (int idx : indices) {
                 if (remainingChannels > 0 && q[idx] > 0) {
-                    if(q[idx] > remainingChannels)
-                        NrBlocks[idx] = remainingChannels;
-                    else
-                        NrBlocks[idx] = q[idx];
+                    NrBlocks[idx] = std::min(2, remainingChannels); // Allocate up to 2 blocks
                     q[idx] -= NrBlocks[idx];
                     T[idx] = simTime().dbl(); // Update last served time
                     remainingChannels -= NrBlocks[idx];
@@ -110,11 +105,44 @@ void Scheduler::handleMessage(cMessage *msg)
                     send(cmd, "txScheduling", idx);
 
                     EV << "Allocated " << NrBlocks[idx] << " blocks to user " << idx << ", remaining channels: " << remainingChannels << endl;
-                    EV << "Served at time: " << std::fixed << std::setprecision(6) << T[idx]<<endl;
                 }
             }
         scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
 
+
     }
 
 }
+double Scheduler::computeWHPAdjustment(double avgDelay) {
+    double low = lowDelay(avgDelay);
+    double medium = mediumDelay(avgDelay);
+    double high = highDelay(avgDelay);
+
+    double increaseSmall = medium;   // If delay is medium, slightly increase W_HP
+    double keepSame = low;           // If delay is low, do not change W_HP
+    double increaseLarge = high;     // If delay is high, significantly increase W_HP
+
+    // Defuzzification: Weighted sum method
+    double adjustment = (increaseSmall * 0.1 + keepSame * 0.0 + increaseLarge * 0.3) /
+                        (increaseSmall + keepSame + increaseLarge + 1e-6); // Avoid division by zero
+
+    return adjustment;
+}
+
+double Scheduler::lowDelay(double delay) {
+    double threshold = par("HPDelayThreshold").doubleValue();
+    return (delay < 0.5 * threshold) ? 1.0 : std::max(0.0, (threshold - delay) / (0.5 * threshold));
+}
+
+double Scheduler::mediumDelay(double delay) {
+    double threshold = par("HPDelayThreshold").doubleValue();
+    if (delay < 0.5 * threshold || delay > threshold)
+        return 0.0;
+    return (delay - 0.5 * threshold) / (0.5 * threshold);
+}
+
+double Scheduler::highDelay(double delay) {
+    double threshold = par("HPDelayThreshold").doubleValue();
+    return (delay >= threshold) ? 1.0 : std::max(0.0, (delay - 0.5 * threshold) / (0.5 * threshold));
+}
+

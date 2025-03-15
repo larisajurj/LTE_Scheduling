@@ -24,6 +24,7 @@ simple Scheduler
         //volatile 
         double schedulingPeriod @unit(ms) = default(1 ms);
         int gateSize;//me, dt
+       double HPDelayThreshold @unit(ms)=default(500 ms);
 
     gates:
         output txScheduling[gateSize];
