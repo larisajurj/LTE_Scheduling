@@ -25,6 +25,8 @@ using namespace omnetpp;
  */
 class MyQ : public cSimpleModule
 {
+  private:
+    int queueLength;
 
   protected:
      //cMessage *msgServiced;
@@ -32,6 +34,10 @@ class MyQ : public cSimpleModule
      cQueue queue;
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+  public:
+      void setQlp(int value); // Setter for dynamic qlp
+      int getQlp() const;
 };
 
 #endif

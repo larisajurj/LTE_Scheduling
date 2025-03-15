@@ -1,0 +1,59 @@
+version 3
+run Sched1-0-20241210-22:09:40-25384
+attr configname Sched1
+attr datetime 20241210-22:09:40
+attr datetimef 20241210-220940
+attr experiment Sched1
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network RadioSch2
+attr processid 25384
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config description "low job arrival rate"
+config *.scalar-recording true
+config *.vector-recording true
+config *.usersCount 5
+config *.user[*].generator.networkLoad 0.3
+config *.user[*].generator.packetsPerUser 4
+config *.user[*].generator.channels 10
+config *.user[*].generator.usersCount 5
+config *.user[*].generator.MAX_Sim "10 s"
+config network RadioSch2
+config sim-time-limit 100h
+config cpu-time-limit 300s
+config record-eventlog true
+config simtime-resolution ns
+
+vector 0 RadioSch2.sink lifetime_user0:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr title "Economy User 1 Packet Lifetime"
+attr unit s
+vector 1 RadioSch2.sink lifetime_user1:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr title "Premium User 1 Packet Lifetime"
+attr unit s
+vector 2 RadioSch2.sink lifetime_user2:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr title "Premium User 2 Packet Lifetime"
+attr unit s
+vector 3 RadioSch2.sink lifetime_user3:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr title "Standard User Packet Lifetime"
+attr unit s
+vector 4 RadioSch2.sink lifetime_user4:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr title "Economy User 2 Packet Lifetime"
+attr unit s
+

@@ -14,6 +14,8 @@
 // 
 
 #include "Scheduler.h"
+#include "MyQ.h"
+#include <iomanip>
 
 Define_Module(Scheduler);
 
@@ -36,12 +38,17 @@ void Scheduler::initialize()
     NrOfChannels = 10;//read from omnetpp.ini
     selfMsg = new cMessage("selfMsg");
     r.resize(NrUsers, 1.0);
-    T.resize(NrUsers, 1.0);
+    T.resize(NrUsers, 0.0);
     p.resize(NrUsers, 0.0); //  product of its radio link quality r[i] and the time elapsed since it was served last time T[i]
-    for(int i=0; i<10;i++){
+    for(int i=0; i<NrUsers;i++){
            q[i]=0;
            NrBlocks[i]=0;
     }
+    userWeights[0] = 1;
+    userWeights[1] = 8;
+    userWeights[2] = 4;
+    userWeights[3] = 2;
+    userWeights[4] = 1;
     scheduleAt(simTime(), selfMsg);
 }
 
@@ -50,21 +57,30 @@ void Scheduler::handleMessage(cMessage *msg)
         int q[NrUsers];
         int NrBlocks[NrUsers];
 
-        // Step 1: Get queue lengths and randomly generate channel quality
-        for(int j=0; j<NrUsers; j++){
-            q[j]= getParentModule()->getSubmodule("user",j)->getSubmodule("myqq")->par("qlp");
-            r[j] = uniform(0.1, 1.0); // Random quality between 0.1 and 1.0
-            EV << "queue length q["<<j<<"]= " << q[j] <<endl;
-        }
-
         if (msg == selfMsg){
-            std::vector<double> r(NrUsers);   // Channel quality for each user
-            std::vector<double> p(NrUsers);   // PF metric for each user
+        // Step 1: Get queue lengths and randomly generate channel quality
+           for(int j=0; j<NrUsers; j++){
+               cModule* userModule = getParentModule()->getSubmodule("user", j);
+               cModule* myqqModule = userModule->getSubmodule("myqq");
+               MyQ* myqq = dynamic_cast<MyQ*>(myqqModule);
+
+               q[j] = myqq->getQlp();
+
+               r[j] = uniform(0.1, 1.0); // Random quality between 0.1 and 1.0
+               EV << "Scheduler: Updated queue length q["<<j<<"]= " << q[j] <<endl;
+               EV << "Scheduler: Updated r["<<j<<"]= " << r[j] <<endl;
+
+           }
+           //std::vector<double> r(NrUsers);   // Channel quality for each user
+           std::vector<double> p(NrUsers);   // PF metric for each user
 
         // Step 2: Compute the PF metric for each user
             for (int i = 0; i < NrUsers; i++) {
                 double timeSinceLastServed = simTime().dbl() - T[i];
-                p[i] = r[i] * timeSinceLastServed;
+                p[i] = r[i] * timeSinceLastServed * userWeights[i];
+                EV << "Scheduler: Updated PT p[" << i << "] = " << std::fixed << std::setprecision(6) << p[i] << endl;
+                EV << "r[" << i << "] = " << std::fixed << std::setprecision(6) << r[i] << " t[" << i << "] = " << std::fixed << std::setprecision(6) << T[i] << endl;
+
             }
 
         // Step 3: Sort users by their PF metric in descending order
@@ -79,7 +95,10 @@ void Scheduler::handleMessage(cMessage *msg)
             int remainingChannels = NrOfChannels;
             for (int idx : indices) {
                 if (remainingChannels > 0 && q[idx] > 0) {
-                    NrBlocks[idx] = std::min(2, remainingChannels); // Allocate up to 2 blocks
+                    if(q[idx] > remainingChannels)
+                        NrBlocks[idx] = remainingChannels;
+                    else
+                        NrBlocks[idx] = q[idx];
                     q[idx] -= NrBlocks[idx];
                     T[idx] = simTime().dbl(); // Update last served time
                     remainingChannels -= NrBlocks[idx];
@@ -91,6 +110,7 @@ void Scheduler::handleMessage(cMessage *msg)
                     send(cmd, "txScheduling", idx);
 
                     EV << "Allocated " << NrBlocks[idx] << " blocks to user " << idx << ", remaining channels: " << remainingChannels << endl;
+                    EV << "Served at time: " << std::fixed << std::setprecision(6) << T[idx]<<endl;
                 }
             }
         scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);

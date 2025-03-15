@@ -14,21 +14,32 @@
 // 
 
 #include "Sink.h"
+#include <fstream>
 
 Define_Module(Sink);
 
 void Sink::initialize()
 {
-   // lifetimeSignal = registerSignal("lifetime");
+    int NrUsers = par("gateSize").intValue();
+        for (int i = 0; i < NrUsers; i++) {
+                std::string signalName = "lifetime_user" + std::to_string(i);
+                lifetimeSignals.push_back(registerSignal(signalName.c_str()));
+                EV << "Registered signal: " << signalName << endl;
+            }
 }
 
 void Sink::handleMessage(cMessage *msg)
 {
+    int NrUsers = par("gateSize").intValue();
     simtime_t lifetime = simTime() - msg->getCreationTime();
-    //if (msg->arrivedOn("rxPackets",i)) {
-        //do something msg is from user [i]
-    //}
-      EV << "Received " << msg->getName() << ", lifetime: " << lifetime << "s" << endl;
-    //  emit(lifetimeSignal, lifetime);
-      delete msg;
+    for(int i=0;i < NrUsers;i++){
+        if (msg->arrivedOn("rxPackets",i)) {
+            EV << "Message arrived on rxPackets[" << i << "]" << endl;
+    // Emit the lifetime signal for the corresponding user
+               emit(lifetimeSignals[i], lifetime);
+               break; // Exit the loop after identifying the gate
+           }
+    }
+    EV << "Received " << msg->getName() << ", lifetime: " << lifetime << "s" << endl;
+    delete msg;
 }

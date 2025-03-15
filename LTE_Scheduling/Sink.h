@@ -17,7 +17,8 @@
 #define __SCHED_TST_SINK_H_
 
 #include <omnetpp.h>
-
+#include <vector>
+#include <map>
 using namespace omnetpp;
 
 /**
@@ -26,10 +27,11 @@ using namespace omnetpp;
 class Sink : public cSimpleModule
 {
 private:
-  //  simsignal_t lifetimeSignal;
+    std::vector<simsignal_t> lifetimeSignals;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 };
+
 
 #endif
