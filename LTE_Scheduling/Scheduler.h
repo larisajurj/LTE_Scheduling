@@ -15,8 +15,7 @@ public:
     Scheduler();
     ~Scheduler();
 private:
-    double W_HP = 1.0;  // Initial weight for HP users
-        std::vector<int> HPUsers;  // Store indices of high-priority users
+    double W_HP = 8.0;  // Initial weight for HP users
 
         double computeWHPAdjustment(double avgDelay);
         double lowDelay(double delay);
@@ -28,8 +27,8 @@ private:
     int userWeights[10];
     int q[10];// queues' lengths. NrUsers schould be <= 10 !!!
     int NrBlocks[10];
-    std::vector<int> r;
-    std::vector<int> p;
+    std::vector<double> r;
+    std::vector<double> p;
     std::vector<double> T; // Time since last served for each user
   protected:
     virtual void initialize();
