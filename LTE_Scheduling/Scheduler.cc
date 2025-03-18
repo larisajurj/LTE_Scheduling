@@ -14,7 +14,7 @@
 // 
 
 #include "Scheduler.h"
-#include "MyQ.h"
+#include "myQ.h"
 #include <iomanip>
 
 Define_Module(Scheduler);
@@ -37,13 +37,26 @@ void Scheduler::initialize()
     NrUsers = par("gateSize").intValue();
     NrOfChannels = 10;//read from omnetpp.ini
     selfMsg = new cMessage("selfMsg");
-    r.resize(NrUsers, 1.0);
-    T.resize(NrUsers, 0.0);
-    p.resize(NrUsers, 0.0); //  product of its radio link quality r[i] and the time elapsed since it was served last time T[i]
     for(int i=0; i<NrUsers;i++){
-           q[i]=0;
-           NrBlocks[i]=0;
-    }
+              q[i]=0;
+              NrBlocks[i]=0;
+              //weights[i] = i+1;
+              if(i < round(NrUsers * 0.3)) {
+                  userWeights[i] = par("W_LP").intValue(); //LP
+              }
+              else if(i < round(NrUsers * 0.7)){
+                  userWeights[i] = par("W_MP").intValue(); //MP
+              }
+              else if(i < NrUsers){
+                  userWeights[i] = par("W_HP").intValue(); //HP
+              }
+              radioQuality[i] = uniform(1, 10);
+              lastServedTime[i] = simTime();
+
+              EV << "Initialize user: " << i <<" weight: " << userWeights[i]
+                      << " Radio Quality: " << radioQuality[i] << endl;
+       }
+       scheduleAt(simTime(), selfMsg);
     userWeights[0] = 1;
     userWeights[1] = 8;
     userWeights[2] = 4;
@@ -54,67 +67,96 @@ void Scheduler::initialize()
 
 void Scheduler::handleMessage(cMessage *msg)
 {
-        int q[NrUsers];
-        int NrBlocks[NrUsers];
-
-        if (msg == selfMsg){
-        // Step 1: Get queue lengths and randomly generate channel quality
-           for(int j=0; j<NrUsers; j++){
-               cModule* userModule = getParentModule()->getSubmodule("user", j);
-               cModule* myqqModule = userModule->getSubmodule("myqq");
-               MyQ* myqq = dynamic_cast<MyQ*>(myqqModule);
-
-               q[j] = myqq->getQlp();
-
-               r[j] = uniform(0.1, 1.0); // Random quality between 0.1 and 1.0
-               EV << "Scheduler: Updated queue length q["<<j<<"]= " << q[j] <<endl;
-               EV << "Scheduler: Updated r["<<j<<"]= " << r[j] <<endl;
-
+    for(int i=0;i < NrUsers;i++){
+           if (msg->arrivedOn("rxInfo", i)){
+               q[i]= msg->par("ql_info");
+               EV << "Update: q["<<i<<"]= " << q[i] <<endl;
+               delete(msg);
            }
-           //std::vector<double> r(NrUsers);   // Channel quality for each user
-           std::vector<double> p(NrUsers);   // PF metric for each user
+       }
 
-        // Step 2: Compute the PF metric for each user
-            for (int i = 0; i < NrUsers; i++) {
-                double timeSinceLastServed = simTime().dbl() - T[i];
-                p[i] = r[i] * timeSinceLastServed * userWeights[i];
-                EV << "Scheduler: Updated PT p[" << i << "] = " << std::fixed << std::setprecision(6) << p[i] << endl;
-                EV << "r[" << i << "] = " << std::fixed << std::setprecision(6) << r[i] << " t[" << i << "] = " << std::fixed << std::setprecision(6) << T[i] << endl;
+       if (msg == selfMsg){
 
-            }
+           memset(NrBlocks, 0, sizeof(NrBlocks));
+           int totalBlocks = NrOfChannels;
+           int remainingBlocks = totalBlocks;
+           double priorities[NrUsers];
+           double totalPriority = 0.0;
 
-        // Step 3: Sort users by their PF metric in descending order
-            std::vector<int> indices(NrUsers);
-            for (int i = 0; i < NrUsers; i++) {
-                indices[i] = i;
-            }
-            std::sort(indices.begin(), indices.end(),
-                      [&p](int a, int b) { return p[a] > p[b]; });
+           for(int i=0; i<NrUsers;i++){
+               radioQuality[i] = uniform(1, 10);
+           }
+           std::vector<std::pair<int, double>> userPriorities;
 
-       // Step 4: Allocate blocks to users based on sorted order
-            int remainingChannels = NrOfChannels;
-            for (int idx : indices) {
-                if (remainingChannels > 0 && q[idx] > 0) {
-                    if(q[idx] > remainingChannels)
-                        NrBlocks[idx] = remainingChannels;
-                    else
-                        NrBlocks[idx] = q[idx];
-                    q[idx] -= NrBlocks[idx];
-                    T[idx] = simTime().dbl(); // Update last served time
-                    remainingChannels -= NrBlocks[idx];
+           for (int i = 0; i < NrUsers; i++) {
 
-                    // Create and send a command message
-                    cMessage *cmd = new cMessage("cmd");
-                    cmd->addPar("nrBlocks");
-                    cmd->par("nrBlocks").setLongValue(NrBlocks[idx]);
-                    send(cmd, "txScheduling", idx);
+                      if(i >= round(NrUsers*0.7)){
+                              userWeights[i] = par("W_HP").intValue();
+                      }
 
-                    EV << "Allocated " << NrBlocks[idx] << " blocks to user " << idx << ", remaining channels: " << remainingChannels << endl;
-                    EV << "Served at time: " << std::fixed << std::setprecision(6) << T[idx]<<endl;
-                }
-            }
-        scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
+                      EV << "User: " << i <<" New weight: " << userWeights[i] << endl;
 
-    }
+                      priorities[i] = userWeights[i] * (simTime().dbl() - lastServedTime[i].dbl());
 
-}
+
+
+                      totalPriority += priorities[i];
+                      userPriorities.push_back({i, priorities[i]});
+                  }
+
+           std::sort(userPriorities.begin(), userPriorities.end(),
+                             [](const std::pair<int, double>& a, const std::pair<int, double>& b) {
+                                 return a.second > b.second;  // Sort in descending order
+                             });
+
+
+
+           for (const auto& user : userPriorities) {
+                   int userIndex = user.first;
+                   double userPriority = user.second;
+
+                   if (remainingBlocks > 0 && q[userIndex] > 0) {
+
+                       //the best channel from the remaining empty channels
+                       int allocatedBlocks = std::ceil((userPriority / totalPriority) * remainingBlocks);
+                       allocatedBlocks = std::min(allocatedBlocks, q[userIndex]); // Do not allocate more than available in queue
+                       allocatedBlocks = std::min(allocatedBlocks, remainingBlocks); // Do not exceed remaining blocks
+
+                       NrBlocks[userIndex] = allocatedBlocks;
+                       remainingBlocks -= allocatedBlocks;
+
+
+                       if (NrBlocks[userIndex] > 0) {
+                           lastServedTime[userIndex] = simTime();
+                       }
+                   }
+               }
+           for (const auto& user : userPriorities) {
+                       int userIndex = user.first;
+                       if (remainingBlocks > 0 && q[userIndex] > NrBlocks[userIndex]) {
+                           NrBlocks[userIndex]++;
+                           remainingBlocks--;
+
+                           lastServedTime[userIndex] = simTime();
+                       }
+                   }
+
+           for(int i=0;i < NrUsers;i++){
+               if(NrBlocks[i] > 0){
+                   cMessage *cmd = new cMessage("cmd");
+                   cmd->addPar("nrBlocks");
+                   cmd->par("nrBlocks").setLongValue(NrBlocks[i]);
+                   send(cmd,"txScheduling",i);
+                   EV << "Allocated " << NrBlocks[i] << " blocks to user " << i
+                                      << " (Priority: " << priorities[i] << ")" << "Available in queue: " << q[i] << endl;
+               }
+           }
+
+
+           EV << "Remaining Blocks: " << remainingBlocks << endl;
+
+           scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
+       }
+
+
+   }

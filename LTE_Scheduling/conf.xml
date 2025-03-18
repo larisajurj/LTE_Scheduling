@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<FLC>
+
+	<n_bits axis="x">
+		   <value>64</value>
+	</n_bits>
+	<m_bits axis="y">
+		   <value>4</value>
+	</m_bits>
+	<n_inp>
+		   <value>2</value>
+	</n_inp>
+	<n_rules>
+		<value>49</value>
+	</n_rules>
+	<delta>
+		<value>2</value>
+	</delta>
+
+	<!--Fuzzy set for the first input-->
+	<fuzzy_set type="input" index="1"  nterms="7">
+		<term>
+			<name>NL</name>
+			<xa>0</xa>
+			<xb>0</xb>
+			<xc>7</xc>
+			<xd>10</xd>
+		</term>
+		<term>
+			<name>NM</name>
+			<xa>7</xa>
+			<xb>10</xb>
+			<xc>15</xc>
+			<xd>20</xd>
+		</term>
+		<term>
+			<name>NS</name>
+			<xa>15</xa>
+			<xb>20</xb>
+			<xc>28</xc>
+			<xd>31</xd>
+		</term>
+		<term>
+			<name>ZR</name>
+			<xa>28</xa>
+			<xb>31</xb>
+			<xc>31</xc>
+			<xd>34</xd>
+		</term>
+		<term>
+			<name>PS</name>
+			<xa>31</xa>
+			<xb>34</xb>
+			<xc>40</xc>
+			<xd>45</xd>
+		</term>
+		<term>
+			<name>PM</name>
+			<xa>40</xa>
+			<xb>45</xb>
+			<xc>50</xc>
+			<xd>55</xd>
+		</term>
+		<term>
+			<name>PL</name>
+			<xa>50</xa>
+			<xb>55</xb>
+			<xc>63</xc>
+			<xd>63</xd>
+		</term>		
+
+	</fuzzy_set>
+	
+	<fuzzy_set type="input" index="2"  nterms="7">
+		<term>
+			<name>NL</name>
+			<xa>0</xa>
+			<xb>0</xb>
+			<xc>7</xc>
+			<xd>10</xd>
+		</term>
+		<term>
+			<name>NM</name>
+			<xa>7</xa>
+			<xb>10</xb>
+			<xc>15</xc>
+			<xd>20</xd>
+		</term>
+		<term>
+			<name>NS</name>
+			<xa>15</xa>
+			<xb>20</xb>
+			<xc>28</xc>
+			<xd>31</xd>
+		</term>
+		<term>
+			<name>ZR</name>
+			<xa>28</xa>
+			<xb>31</xb>
+			<xc>31</xc>
+			<xd>34</xd>
+		</term>
+		<term>
+			<name>PS</name>
+			<xa>31</xa>
+			<xb>34</xb>
+			<xc>40</xc>
+			<xd>45</xd>
+		</term>
+		<term>
+			<name>PM</name>
+			<xa>40</xa>
+			<xb>45</xb>
+			<xc>50</xc>
+			<xd>55</xd>
+		</term>
+		<term>
+			<name>PL</name>
+			<xa>50</xa>
+			<xb>55</xb>
+			<xc>63</xc>
+			<xd>63</xd>
+		</term>		
+
+	</fuzzy_set>
+	
+	
+	<!--Fuzzy set for the output-->
+	<fuzzy_set type="output" nterms="7">
+		<term>
+			<name>NL</name>
+			<xa>0</xa>
+			<xb>0</xb>
+			<xc>0</xc>
+			<xd>0</xd>
+		</term>
+		<term>
+			<name>NM</name>
+			<xa>15</xa>
+			<xb>15</xb>
+			<xc>15</xc>
+			<xd>15</xd>
+		</term>
+		<term>
+			<name>NS</name>
+			<xa>29</xa>
+			<xb>29</xb>
+			<xc>29</xc>
+			<xd>29</xd>
+		</term>
+		<term>
+			<name>ZR</name>
+			<xa>31</xa>
+			<xb>31</xb>
+			<xc>31</xc>
+			<xd>31</xd>
+		</term>
+		<term>
+			<name>PS</name>
+			<xa>33</xa>
+			<xb>33</xb>
+			<xc>33</xc>
+			<xd>33</xd>
+		</term>
+		<term>
+			<name>PM</name>
+			<xa>48</xa>
+			<xb>48</xb>
+			<xc>48</xc>
+			<xd>48</xd>
+		</term>
+		<term>
+			<name>PL</name>
+			<xa>63</xa>
+			<xb>63</xb>
+			<xc>63</xc>
+			<xd>63</xd>
+		</term>
+		
+	</fuzzy_set>
+
+	<!--number of rules = product(number of membership functions for each input)-->	
+
+	<!--number of premises = number of input variables-->
+
+	<!-- For diffHP = NL: always output PL -->
+	<rule><p1>NL</p1><p2>NL</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>NM</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>NS</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>ZR</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>PS</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>PM</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>PL</p2><c>PL</c></rule>
+	
+	<!-- For diffHP = NM: always output PL -->
+	<rule><p1>NM</p1><p2>NL</p2><c>PL</c></rule>
+	<rule><p1>NM</p1><p2>NM</p2><c>PL</c></rule>
+	<rule><p1>NM</p1><p2>NS</p2><c>PL</c></rule>
+	<rule><p1>NM</p1><p2>ZR</p2><c>PL</c></rule>
+	<rule><p1>NM</p1><p2>PS</p2><c>PL</c></rule>
+	<rule><p1>NM</p1><p2>PM</p2><c>PL</c></rule>
+	<rule><p1>NM</p1><p2>PL</p2><c>PL</c></rule>
+	
+	<!-- For diffHP = NS: always output PL -->
+	<rule><p1>NS</p1><p2>NL</p2><c>PL</c></rule>
+	<rule><p1>NS</p1><p2>NM</p2><c>PL</c></rule>
+	<rule><p1>NS</p1><p2>NS</p2><c>PL</c></rule>
+	<rule><p1>NS</p1><p2>ZR</p2><c>PL</c></rule>
+	<rule><p1>NS</p1><p2>PS</p2><c>PL</c></rule>
+	<rule><p1>NS</p1><p2>PM</p2><c>PL</c></rule>
+	<rule><p1>NS</p1><p2>PL</p2><c>PL</c></rule>
+	
+	<!-- For diffHP = ZR: also output PL (to ensure HP remains prioritized) -->
+	<rule><p1>ZR</p1><p2>NL</p2><c>PL</c></rule>
+	<rule><p1>ZR</p1><p2>NM</p2><c>PL</c></rule>
+	<rule><p1>ZR</p1><p2>NS</p2><c>PL</c></rule>
+	<rule><p1>ZR</p1><p2>ZR</p2><c>PL</c></rule>
+	<rule><p1>ZR</p1><p2>PS</p2><c>PL</c></rule>
+	<rule><p1>ZR</p1><p2>PM</p2><c>PL</c></rule>
+	<rule><p1>ZR</p1><p2>PL</p2><c>PL</c></rule>
+	
+	<!-- For diffHP = PS: now HP is slightly better than desired; lower weight modestly -->
+	<rule><p1>PS</p1><p2>NL</p2><c>NS</c></rule>
+	<rule><p1>PS</p1><p2>NM</p2><c>NS</c></rule>
+	<rule><p1>PS</p1><p2>NS</p2><c>NS</c></rule>
+	<rule><p1>PS</p1><p2>ZR</p2><c>ZR</c></rule>
+	<rule><p1>PS</p1><p2>PS</p2><c>PL</c></rule>
+	<rule><p1>PS</p1><p2>PM</p2><c>PL</c></rule>
+	<rule><p1>PS</p1><p2>PL</p2><c>PL</c></rule>
+	
+	<!-- For diffHP = PM: HP is too fast; lower weight further -->
+	<rule><p1>PM</p1><p2>NL</p2><c>NM</c></rule>
+	<rule><p1>PM</p1><p2>NM</p2><c>NM</c></rule>
+	<rule><p1>PM</p1><p2>NS</p2><c>NS</c></rule>
+	<rule><p1>PM</p1><p2>ZR</p2><c>NS</c></rule>
+	<rule><p1>PM</p1><p2>PS</p2><c>PM</c></rule>
+	<rule><p1>PM</p1><p2>PM</p2><c>PM</c></rule>
+	<rule><p1>PM</p1><p2>PL</p2><c>PM</c></rule>
+	
+	<!-- For diffHP = PL: HP is far better than desired; output NL -->
+	<rule><p1>PL</p1><p2>NL</p2><c>NL</c></rule>
+	<rule><p1>PL</p1><p2>NM</p2><c>NL</c></rule>
+	<rule><p1>PL</p1><p2>NS</p2><c>NM</c></rule>
+	<rule><p1>PL</p1><p2>ZR</p2><c>NM</c></rule>
+	<rule><p1>PL</p1><p2>PS</p2><c>PS</c></rule>
+	<rule><p1>PL</p1><p2>PM</p2><c>PS</c></rule>
+	<rule><p1>PL</p1><p2>PL</p2><c>PS</c></rule>
+
+</FLC>

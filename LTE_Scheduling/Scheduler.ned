@@ -24,8 +24,13 @@ simple Scheduler
         //volatile 
         double schedulingPeriod @unit(ms) = default(1 ms);
         int gateSize;//me, dt
+        int W_HP=default(8);
+        int W_MP=default(6);
+        int W_LP=default(2);
 
     gates:
         output txScheduling[gateSize];
         input rxInfo[gateSize];
+        input rxFLC;
+        output txFLC;
 }

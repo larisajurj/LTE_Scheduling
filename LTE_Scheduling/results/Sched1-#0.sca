@@ -1,8 +1,8 @@
 version 3
-run Sched1-0-20241210-00:15:50-24732
+run Sched1-0-20241210-21:40:44-25492
 attr configname Sched1
-attr datetime 20241210-00:15:50
-attr datetimef 20241210-001550
+attr datetime 20241210-21:40:44
+attr datetimef 20241210-214044
 attr experiment Sched1
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network RadioSch2
-attr processid 24732
+attr processid 25492
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -21,11 +21,11 @@ config *.scalar-recording true
 config *.vector-recording true
 config *.usersCount 5
 config **.user[*].generator.sendIaTime "0.2 ms"
-config *.user[*].generator.networkLoad 0.3
+config *.user[*].generator.networkLoad 0.9
 config *.user[*].generator.packetsPerUser 4
 config *.user[*].generator.channels 14
 config *.user[*].generator.usersCount 7
-config *.user[*].generator.MAX_Sim "10 s"
+config *.user[*].generator.MAX_Sim "30 s"
 config network RadioSch2
 config sim-time-limit 100h
 config cpu-time-limit 300s
@@ -39,52 +39,52 @@ attr unit ms
 par RadioSch2.scheduler gateSize 5
 par RadioSch2.sink typename "\"Sink\""
 par RadioSch2.sink gateSize 5
-scalar RadioSch2.sink lifetime_user4:mean 0.5634118803677
+scalar RadioSch2.sink lifetime_user4:mean 3.9941038653467
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Economy User 2 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user4:max 2.279843348
+scalar RadioSch2.sink lifetime_user4:max 44.352342256
 attr interpolationmode linear
 attr recordingmode max
 attr title "Economy User 2 Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user3:mean 0.53699427308609
+scalar RadioSch2.sink lifetime_user3:mean 1.705760230705
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Standard User Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user3:max 2.644053016
+scalar RadioSch2.sink lifetime_user3:max 16.24324684
 attr interpolationmode linear
 attr recordingmode max
 attr title "Standard User Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user2:mean 0.53185524898532
+scalar RadioSch2.sink lifetime_user2:mean 0.97468061637699
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Premium User 2 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user2:max 1.995778663
+scalar RadioSch2.sink lifetime_user2:max 13.333072057
 attr interpolationmode linear
 attr recordingmode max
 attr title "Premium User 2 Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user1:mean 0.52063134635112
+scalar RadioSch2.sink lifetime_user1:mean 0.65498049516696
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Premium User 1 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user1:max 1.9811587
+scalar RadioSch2.sink lifetime_user1:max 6.69934452
 attr interpolationmode linear
 attr recordingmode max
 attr title "Premium User 1 Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user0:mean 0.5639207804185
+scalar RadioSch2.sink lifetime_user0:mean 3.9114404091004
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Economy User 1 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user0:max 3.056766404
+scalar RadioSch2.sink lifetime_user0:max 44.94648204
 attr interpolationmode linear
 attr recordingmode max
 attr title "Economy User 1 Packet Lifetime, max"
@@ -92,9 +92,9 @@ attr unit s
 par RadioSch2.user[0].generator typename "\"Source\""
 par RadioSch2.user[0].generator sendIaTime 0.2ms
 attr unit ms
-par RadioSch2.user[0].generator MAX_Sim 10000ms
+par RadioSch2.user[0].generator MAX_Sim 30000ms
 attr unit ms
-par RadioSch2.user[0].generator networkLoad 0.3
+par RadioSch2.user[0].generator networkLoad 0.9
 par RadioSch2.user[0].generator packetsPerUser 4
 par RadioSch2.user[0].generator usersCount 7
 par RadioSch2.user[0].generator channels 14
@@ -104,9 +104,9 @@ par RadioSch2.user[0] typename "\"User\""
 par RadioSch2.user[1].generator typename "\"Source\""
 par RadioSch2.user[1].generator sendIaTime 0.2ms
 attr unit ms
-par RadioSch2.user[1].generator MAX_Sim 10000ms
+par RadioSch2.user[1].generator MAX_Sim 30000ms
 attr unit ms
-par RadioSch2.user[1].generator networkLoad 0.3
+par RadioSch2.user[1].generator networkLoad 0.9
 par RadioSch2.user[1].generator packetsPerUser 4
 par RadioSch2.user[1].generator usersCount 7
 par RadioSch2.user[1].generator channels 14
@@ -116,9 +116,9 @@ par RadioSch2.user[1] typename "\"User\""
 par RadioSch2.user[2].generator typename "\"Source\""
 par RadioSch2.user[2].generator sendIaTime 0.2ms
 attr unit ms
-par RadioSch2.user[2].generator MAX_Sim 10000ms
+par RadioSch2.user[2].generator MAX_Sim 30000ms
 attr unit ms
-par RadioSch2.user[2].generator networkLoad 0.3
+par RadioSch2.user[2].generator networkLoad 0.9
 par RadioSch2.user[2].generator packetsPerUser 4
 par RadioSch2.user[2].generator usersCount 7
 par RadioSch2.user[2].generator channels 14
@@ -128,9 +128,9 @@ par RadioSch2.user[2] typename "\"User\""
 par RadioSch2.user[3].generator typename "\"Source\""
 par RadioSch2.user[3].generator sendIaTime 0.2ms
 attr unit ms
-par RadioSch2.user[3].generator MAX_Sim 10000ms
+par RadioSch2.user[3].generator MAX_Sim 30000ms
 attr unit ms
-par RadioSch2.user[3].generator networkLoad 0.3
+par RadioSch2.user[3].generator networkLoad 0.9
 par RadioSch2.user[3].generator packetsPerUser 4
 par RadioSch2.user[3].generator usersCount 7
 par RadioSch2.user[3].generator channels 14
@@ -140,9 +140,9 @@ par RadioSch2.user[3] typename "\"User\""
 par RadioSch2.user[4].generator typename "\"Source\""
 par RadioSch2.user[4].generator sendIaTime 0.2ms
 attr unit ms
-par RadioSch2.user[4].generator MAX_Sim 10000ms
+par RadioSch2.user[4].generator MAX_Sim 30000ms
 attr unit ms
-par RadioSch2.user[4].generator networkLoad 0.3
+par RadioSch2.user[4].generator networkLoad 0.9
 par RadioSch2.user[4].generator packetsPerUser 4
 par RadioSch2.user[4].generator usersCount 7
 par RadioSch2.user[4].generator channels 14

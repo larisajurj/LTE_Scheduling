@@ -24,16 +24,27 @@ network RadioSch2
     submodules:
         scheduler: Scheduler {
             gateSize = parent.usersCount;
-        //@display("p=120,40");
+        @display("p=120,40");
         }
         sink: Sink {
         gateSize = parent.usersCount;
-        //@display("p=120,200");
+        @display("p=120,200");
         }
         user[usersCount]: User {
-        //@display("p=40,120");
+        @display("p=40,120");
+        }
+        flc: FLC {
+            parameters:
+                @display("p=89,100");
+        }
+        gen: GeneratorFLC {
+            parameters:
+                @display("p=209,100");
         }
     connections: 
+         gen.out --> flc.in;
+        scheduler.txFLC --> flc.schedIn;
+        flc.schedOut --> scheduler.rxFLC;
         for i = 0..usersCount - 1 {
         scheduler.txScheduling[i] --> user[i].rxScheduling;
         user[i].txPackets --> sink.rxPackets[i];
