@@ -36,11 +36,9 @@ private:
     int userWeights[10];
     int q[10];// queues' lengths. NrUsers schould be <= 10 !!!
     int NrBlocks[10];
-    omnetpp::SimTime lastServedTime[10];
-    double radioQuality[10];
-    //std::vector<double> r;
-    //std::vector<double> p;
-    //std::vector<double> T; // Time since last served for each user
+    std::vector<double> r;
+    std::vector<double> p;
+    std::vector<double> T; // Time since last served for each user
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
