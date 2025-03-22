@@ -15,6 +15,8 @@
 import User;
 import Sink;
 import Scheduler;
+import GeneratorFLC;
+import FLC;
 
 network RadioSch2
 {
