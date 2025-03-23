@@ -298,8 +298,8 @@ void FLC::initialize()
 {
     qtime.setName("delay vector");
     qtimew.setName("weight vector");
-    result_dep.setName("result nescalat");
-    res_dep.setName("res scalat");
+    result_dep.setName("unscaled result");
+    res_dep.setName("scaled result");
 
    cXMLElement *rootelement = par("config").xmlValue();
    EV <<"initialize FLC\n";

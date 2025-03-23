@@ -14,7 +14,7 @@
 		<value>49</value>
 	</n_rules>
 	<delta>
-		<value>2</value>
+		<value>4</value>
 	</delta>
 
 	<!--Fuzzy set for the first input-->
@@ -124,60 +124,60 @@
 
 	</fuzzy_set>
 	
-	
 	<!--Fuzzy set for the output-->
 	<fuzzy_set type="output" nterms="7">
 		<term>
 			<name>NL</name>
 			<xa>0</xa>
 			<xb>0</xb>
-			<xc>0</xc>
-			<xd>0</xd>
+			<xc>5</xc>
+			<xd>10</xd>
 		</term>
 		<term>
 			<name>NM</name>
-			<xa>15</xa>
+			<xa>10</xa>
 			<xb>15</xb>
-			<xc>15</xc>
-			<xd>15</xd>
+			<xc>20</xc>
+			<xd>25</xd>
 		</term>
 		<term>
 			<name>NS</name>
-			<xa>29</xa>
-			<xb>29</xb>
-			<xc>29</xc>
-			<xd>29</xd>
+			<xa>20</xa>
+			<xb>25</xb>
+			<xc>30</xc>
+			<xd>35</xd>
 		</term>
 		<term>
 			<name>ZR</name>
 			<xa>31</xa>
-			<xb>31</xb>
-			<xc>31</xc>
-			<xd>31</xd>
+			<xb>35</xb>
+			<xc>40</xc>
+			<xd>45</xd>
 		</term>
 		<term>
 			<name>PS</name>
-			<xa>33</xa>
-			<xb>33</xb>
-			<xc>33</xc>
-			<xd>33</xd>
+			<xa>40</xa>
+			<xb>45</xb>
+			<xc>50</xc>
+			<xd>55</xd>
 		</term>
 		<term>
 			<name>PM</name>
-			<xa>48</xa>
-			<xb>48</xb>
-			<xc>48</xc>
-			<xd>48</xd>
+			<xa>50</xa>
+			<xb>55</xb>
+			<xc>60</xc>
+			<xd>63</xd>
 		</term>
 		<term>
 			<name>PL</name>
-			<xa>63</xa>
+			<xa>60</xa>
 			<xb>63</xb>
 			<xc>63</xc>
 			<xd>63</xd>
 		</term>
-		
 	</fuzzy_set>
+
+
 
 	<!--number of rules = product(number of membership functions for each input)-->	
 
@@ -187,7 +187,7 @@
 	<rule><p1>NL</p1><p2>NL</p2><c>PL</c></rule>
 	<rule><p1>NL</p1><p2>NM</p2><c>PL</c></rule>
 	<rule><p1>NL</p1><p2>NS</p2><c>PL</c></rule>
-	<rule><p1>NL</p1><p2>ZR</p2><c>PL</c></rule>
+	<rule><p1>NL</p1><p2>ZR</p2><c>PM</c></rule>        
 	<rule><p1>NL</p1><p2>PS</p2><c>PL</c></rule>
 	<rule><p1>NL</p1><p2>PM</p2><c>PL</c></rule>
 	<rule><p1>NL</p1><p2>PL</p2><c>PL</c></rule>
