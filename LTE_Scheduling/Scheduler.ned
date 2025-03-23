@@ -22,6 +22,7 @@ simple Scheduler
         int usersCount;
         //@display("i=block/dispatch");
         //volatile 
+        int W_HP = default(10) @mutable;
         double schedulingPeriod @unit(ms) = default(1 ms);
         int gateSize;//me, dt
 

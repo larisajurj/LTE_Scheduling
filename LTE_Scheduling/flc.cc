@@ -566,11 +566,11 @@ void FLC::handleMessage(cMessage *msg)
         ev << "Calculating new W_HP..." << endl;
         int wantedDelay = 900;//(int)getParentModule()->par("delayLimit");
         int currentDelay = round((double)getParentModule()->getSubmodule("sink")->par("meanHPDelay"));
-        int W_HP = 10;//(int)getParentModule()->getSubmodule("hp_fifo")->par("weight");
+        int W_HP = (int)getParentModule()->getSubmodule("scheduler")->par("W_HP");
         int B = 14;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
 
         ev << "FLC received mean HP delay: " << currentDelay << "ms" << endl;
-
+        ev << "FLC received W_HP: " << W_HP << endl;
 
         int new_W_HP = W_HP;
         int diff = wantedDelay - currentDelay;
@@ -603,6 +603,8 @@ void FLC::handleMessage(cMessage *msg)
         cPar& W_HP_r = getParentModule()->getSubmodule("hp_fifo")->par("weight");
         W_HP_r.setIntValue(new_W_HP);
 */
+        cPar& W_HP_r = getParentModule()->getSubmodule("scheduler")->par("W_HP");
+        W_HP_r.setIntValue(new_W_HP);
         ev<<"New W_HP "<<new_W_HP<<"\n\n";
 
         qtimew.record(new_W_HP);

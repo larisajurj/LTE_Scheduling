@@ -73,9 +73,13 @@ void Scheduler::handleMessage(cMessage *msg)
            }
            //std::vector<double> r(NrUsers);   // Channel quality for each user
            std::vector<double> p(NrUsers);   // PF metric for each user
-
         // Step 2: Compute the PF metric for each user
             for (int i = 0; i < NrUsers; i++) {
+                //update weighted value based on FLC modifications
+                if( i==1 || i == 2){ //user 1 and 2 are always HP
+                    userWeights[i] = par("W_HP").intValue();
+                    EV << "User: " << i <<" New weight: " << userWeights[i] << endl;
+                }
                 double timeSinceLastServed = simTime().dbl() - T[i];
                 p[i] = r[i] * timeSinceLastServed * userWeights[i];
                 EV << "Scheduler: Updated PT p[" << i << "] = " << std::fixed << std::setprecision(6) << p[i] << endl;
