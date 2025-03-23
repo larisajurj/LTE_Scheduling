@@ -28,6 +28,9 @@ class Sink : public cSimpleModule
 {
 private:
     std::vector<simsignal_t> lifetimeSignals;
+    double totalHPDelay;
+    int hpPacketCount;
+    double meanHPDelay;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

@@ -46,7 +46,7 @@ void Scheduler::initialize()
     }
     userWeights[0] = 1;
     userWeights[1] = 8;
-    userWeights[2] = 4;
+    userWeights[2] = 8;
     userWeights[3] = 2;
     userWeights[4] = 1;
     scheduleAt(simTime(), selfMsg);
