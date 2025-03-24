@@ -1,8 +1,8 @@
 version 3
-run Sched1-0-20250323-14:23:53-18436
+run Sched1-0-20250324-16:19:16-18620
 attr configname Sched1
-attr datetime 20250323-14:23:53
-attr datetimef 20250323-142353
+attr datetime 20250324-16:19:16
+attr datetimef 20250324-161916
 attr experiment Sched1
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network RadioSch2
-attr processid 18436
+attr processid 18620
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -41,49 +41,49 @@ attr unit ms
 par RadioSch2.scheduler gateSize 5
 par RadioSch2.sink typename "\"Sink\""
 par RadioSch2.sink gateSize 5
-par RadioSch2.sink meanHPDelay 618.049
+par RadioSch2.sink meanHPDelay 1196.61
 attr mutable ""
-scalar RadioSch2.sink lifetime_user4:mean 3.5388460809311
+scalar RadioSch2.sink lifetime_user4:mean 3.0043132244269
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Economy User 2 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user4:max 24.06727249
+scalar RadioSch2.sink lifetime_user4:max 22.543417158
 attr interpolationmode linear
 attr recordingmode max
 attr title "Economy User 2 Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user3:mean 1.8011057318058
+scalar RadioSch2.sink lifetime_user3:mean 1.4916366442397
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Standard User Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user3:max 17.332114181
+scalar RadioSch2.sink lifetime_user3:max 17.846950602
 attr interpolationmode linear
 attr recordingmode max
 attr title "Standard User Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user2:mean 0.61414143683043
+scalar RadioSch2.sink lifetime_user2:mean 1.1834709971265
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Premium User 2 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user2:max 4.610931954
+scalar RadioSch2.sink lifetime_user2:max 10.95374794
 attr interpolationmode linear
 attr recordingmode max
 attr title "Premium User 2 Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user1:mean 0.62200935735076
+scalar RadioSch2.sink lifetime_user1:mean 1.2099202331505
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Premium User 1 Packet Lifetime, mean"
 attr unit s
-scalar RadioSch2.sink lifetime_user1:max 4.28445494
+scalar RadioSch2.sink lifetime_user1:max 9.9600013
 attr interpolationmode linear
 attr recordingmode max
 attr title "Premium User 1 Packet Lifetime, max"
 attr unit s
-scalar RadioSch2.sink lifetime_user0:mean 3.6474487283237
+scalar RadioSch2.sink lifetime_user0:mean 3.3094035825862
 attr interpolationmode linear
 attr recordingmode mean
 attr title "Economy User 1 Packet Lifetime, mean"
@@ -103,7 +103,7 @@ par RadioSch2.user[0].generator packetsPerUser 4
 par RadioSch2.user[0].generator usersCount 7
 par RadioSch2.user[0].generator channels 14
 par RadioSch2.user[0].myqq typename "\"MyQ\""
-par RadioSch2.user[0].myqq qlp 4
+par RadioSch2.user[0].myqq qlp 20
 par RadioSch2.user[0] typename "\"User\""
 par RadioSch2.user[1].generator typename "\"Source\""
 par RadioSch2.user[1].generator sendIaTime 0.2ms
@@ -115,7 +115,7 @@ par RadioSch2.user[1].generator packetsPerUser 4
 par RadioSch2.user[1].generator usersCount 7
 par RadioSch2.user[1].generator channels 14
 par RadioSch2.user[1].myqq typename "\"MyQ\""
-par RadioSch2.user[1].myqq qlp 7
+par RadioSch2.user[1].myqq qlp 100
 par RadioSch2.user[1] typename "\"User\""
 par RadioSch2.user[2].generator typename "\"Source\""
 par RadioSch2.user[2].generator sendIaTime 0.2ms
@@ -127,7 +127,7 @@ par RadioSch2.user[2].generator packetsPerUser 4
 par RadioSch2.user[2].generator usersCount 7
 par RadioSch2.user[2].generator channels 14
 par RadioSch2.user[2].myqq typename "\"MyQ\""
-par RadioSch2.user[2].myqq qlp 8
+par RadioSch2.user[2].myqq qlp 80
 par RadioSch2.user[2] typename "\"User\""
 par RadioSch2.user[3].generator typename "\"Source\""
 par RadioSch2.user[3].generator sendIaTime 0.2ms
@@ -139,7 +139,7 @@ par RadioSch2.user[3].generator packetsPerUser 4
 par RadioSch2.user[3].generator usersCount 7
 par RadioSch2.user[3].generator channels 14
 par RadioSch2.user[3].myqq typename "\"MyQ\""
-par RadioSch2.user[3].myqq qlp 3
+par RadioSch2.user[3].myqq qlp 50
 par RadioSch2.user[3] typename "\"User\""
 par RadioSch2.user[4].generator typename "\"Source\""
 par RadioSch2.user[4].generator sendIaTime 0.2ms
@@ -151,7 +151,7 @@ par RadioSch2.user[4].generator packetsPerUser 4
 par RadioSch2.user[4].generator usersCount 7
 par RadioSch2.user[4].generator channels 14
 par RadioSch2.user[4].myqq typename "\"MyQ\""
-par RadioSch2.user[4].myqq qlp 2
+par RadioSch2.user[4].myqq qlp 20
 par RadioSch2.user[4] typename "\"User\""
 par RadioSch2.flc typename "\"FLC\""
 par RadioSch2.flc config "<FLC>...</FLC> at D:/Coding Projects/LTE_Scheduling/LTE_Scheduling/\\conf.xml:2"
